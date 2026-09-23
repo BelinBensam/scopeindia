@@ -1,0 +1,204 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Student Login – SCOPE INDIA{% endblock %}
+
+{% block extra_head %}
+<style>
+  .auth-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0e2a47 0%, #1a4a7a 50%, #0e2a47 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .auth-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: rgba(245,158,11,0.07);
+    border-radius: 50%;
+    top: -200px; right: -200px;
+  }
+  .auth-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+    bottom: -150px; left: -150px;
+  }
+  .auth-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.5rem 2.5rem;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+    position: relative;
+    z-index: 2;
+  }
+  .auth-brand-logo {
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, #0e2a47, #1a4a7a);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 8px 20px rgba(14,42,71,0.4);
+  }
+  .auth-brand-logo i { font-size: 1.8rem; color: #f59e0b; }
+  .auth-card h2 { font-size: 1.5rem; font-weight: 700; color: #0e2a47; }
+  .auth-card .subtitle { color: #6b7280; font-size: 0.875rem; }
+  .form-floating label { color: #6b7280; font-size: 0.9rem; }
+  .form-floating .form-control {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    transition: border-color .2s, box-shadow .2s;
+    height: 56px;
+  }
+  .form-floating .form-control:focus {
+    border-color: #0e2a47;
+    box-shadow: 0 0 0 3px rgba(14,42,71,0.12);
+  }
+  .btn-signin {
+    background: linear-gradient(135deg, #0e2a47, #1a4a7a);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-signin:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(14,42,71,0.35);
+    color: #fff;
+  }
+  .divider { position: relative; text-align: center; margin: 1.2rem 0; }
+  .divider::before {
+    content:'';
+    position:absolute; top:50%; left:0; right:0;
+    height:1px; background:#e5e7eb;
+  }
+  .divider span {
+    background:#fff; padding:0 0.75rem;
+    color:#9ca3af; font-size:0.8rem; position:relative;
+  }
+  .steps-info { background: #f0f7ff; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .steps-info .step-item { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.82rem; color: #374151; margin-bottom: 0.4rem; }
+  .steps-info .step-item:last-child { margin-bottom: 0; }
+  .step-num { width: 20px; height: 20px; border-radius: 50%; background: #0e2a47; color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top:1px; }
+  .password-toggle-btn { cursor: pointer; border: none; background: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <!-- Logo -->
+    <div class="text-center mb-4">
+      <div class="auth-brand-logo">
+        <i class="bi bi-mortarboard-fill"></i>
+      </div>
+      <h2 class="mb-1">Welcome Back</h2>
+      <p class="subtitle mb-0">Sign in to your SCOPE INDIA dashboard</p>
+    </div>
+
+    <!-- Messages -->
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show rounded-3 py-2 px-3 small" role="alert">
+      <i class="bi bi-{% if message.tags == 'error' %}exclamation-triangle-fill{% elif message.tags == 'warning' %}exclamation-circle-fill{% elif message.tags == 'success' %}check-circle-fill{% else %}info-circle-fill{% endif %} me-2"></i>
+      {{ message }}
+      <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+
+    <form method="POST" action="{% url 'login' %}" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger rounded-3 py-2 px-3 small">
+        {% for err in form.non_field_errors %}
+        <div><i class="bi bi-exclamation-triangle-fill me-1"></i>{{ err }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Email -->
+      <div class="form-floating mb-3">
+        {{ form.email }}
+        <label for="id_login_email"><i class="bi bi-envelope me-1"></i> Email Address</label>
+        {% if form.email.errors %}
+        <div class="text-danger small mt-1 ms-1">{{ form.email.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div class="mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="form-label fw-semibold small mb-0 text-dark" for="id_login_password">Password</label>
+          <a href="{% url 'forgot_password' %}" class="small text-decoration-none" style="color:#f59e0b; font-weight:600;">Forgot password?</a>
+        </div>
+        <div class="input-group">
+          {{ form.password }}
+          <button class="btn btn-outline-secondary password-toggle-btn" type="button" id="togglePassword" tabindex="-1">
+            <i class="bi bi-eye" id="toggleIcon"></i>
+          </button>
+        </div>
+        {% if form.password.errors %}
+        <div class="text-danger small mt-1 ms-1">{{ form.password.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Remember Me -->
+      <div class="form-check mb-4 mt-2">
+        {{ form.remember_me }}
+        <label class="form-check-label small text-muted" for="{{ form.remember_me.id_for_label }}">
+          Keep me signed in
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-signin w-100 mb-3">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Sign In to Dashboard
+      </button>
+    </form>
+
+    <div class="divider"><span>New here?</span></div>
+
+    <div class="text-center">
+      <a href="{% url 'register' %}" class="btn btn-outline-secondary w-100 rounded-3 fw-semibold" style="border-radius:12px!important;">
+        <i class="bi bi-person-plus me-2"></i> Create Student Account
+      </a>
+    </div>
+
+    <p class="text-center text-muted mt-3 mb-0" style="font-size:0.75rem;">
+      🔒 Secured with CSRF protection &amp; encrypted sessions
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Show/hide password
+  const toggleBtn = document.getElementById('togglePassword');
+  const toggleIcon = document.getElementById('toggleIcon');
+  const pwdInput = document.getElementById('id_login_password');
+  if (toggleBtn && pwdInput) {
+    toggleBtn.addEventListener('click', function () {
+      const isText = pwdInput.type === 'text';
+      pwdInput.type = isText ? 'password' : 'text';
+      toggleIcon.className = isText ? 'bi bi-eye' : 'bi bi-eye-slash';
+    });
+  }
+
+  // Add floating label class to form fields
+  document.querySelectorAll('.form-floating .form-control').forEach(function(el) {
+    el.classList.add('form-control');
+  });
+</script>
+{% endblock %}

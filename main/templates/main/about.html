@@ -1,0 +1,122 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}About Us – SCOPE INDIA Training Institute{% endblock %}
+
+{% block content %}
+<!-- PAGE HEADER BANNER -->
+<div class="bg-dark text-white py-5" style="background: linear-gradient(135deg, var(--scope-navy-dark), var(--scope-navy));">
+    <div class="container text-center py-3">
+        <h1 class="fw-bold display-5 mb-2">About SCOPE INDIA</h1>
+        <p class="text-white-50 lead mb-0">Bridging the Gap Between Academics and IT Industry Realities</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <!-- INTRO & HISTORY -->
+    <div class="row align-items-center g-5 mb-5">
+        <div class="col-lg-6">
+            <span class="section-tag">Who We Are</span>
+            <h2 class="section-title mb-4">A Legacy of Excellence in IT Skill Development</h2>
+            <p class="text-muted">
+                <strong>SCOPE INDIA</strong>, Center for Software, Networking, and Cloud Education, is an ISO 9001:2015 certified premier training institution established to deliver quality technology education with an uncompromising focus on industry readiness.
+            </p>
+            <p class="text-muted">
+                Since inception, our mission has been straightforward: equip learners with practical coding, problem-solving skills, and architectural understanding so that they hit the ground running from day one in global IT corporations.
+            </p>
+            <div class="row g-3 mt-2">
+                <div class="col-sm-6">
+                    <div class="border rounded p-3 bg-white">
+                        <div class="fw-bold text-primary fs-5 mb-1"><i class="bi bi-award-fill text-warning me-2"></i>ISO Certified</div>
+                        <div class="small text-muted">Quality certified pedagogical standards and curriculum.</div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="border rounded p-3 bg-white">
+                        <div class="fw-bold text-primary fs-5 mb-1"><i class="bi bi-briefcase-fill text-success me-2"></i>100% Placement</div>
+                        <div class="small text-muted">Continuous placement drives until you are successfully placed.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="p-4 bg-white rounded-4 shadow-sm border border-light">
+                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-compass-fill text-warning me-2"></i>Our Mission & Vision</h4>
+                <div class="mb-4">
+                    <h6 class="fw-bold text-primary">Our Vision</h6>
+                    <p class="text-muted small mb-0">
+                        To be the most respected and dependable technology training destination in Southern India, recognized for producing top-tier software professionals, developers, and cloud specialists.
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <h6 class="fw-bold text-primary">Our Mission</h6>
+                    <p class="text-muted small mb-0">
+                        To impart rigorous, project-oriented, hands-on software development training through seasoned industry architects, transforming curious minds into high-impact IT contributors.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DYNAMIC ABOUT CONTENTS FROM DATABASE -->
+    {% if about_contents %}
+        <div class="row g-4 mb-5">
+            {% for item in about_contents %}
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.title }}" class="img-fluid" style="height: 220px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold text-primary mb-3">{{ item.title }}</h4>
+                            <div class="text-muted">
+                                {{ item.content|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- TRAINING METHODOLOGY & CAREER SUPPORT -->
+    <div class="row g-4 mt-2">
+        <div class="col-lg-4 col-md-6">
+            <div class="scope-card p-4">
+                <div class="stat-tile-icon bg-primary bg-opacity-10 text-primary mb-3">
+                    <i class="bi bi-code-square"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Training Methodology</h5>
+                <p class="text-muted small mb-0">
+                    Our training is 70% practical coding and 30% theory. Every concept is accompanied by code demonstrations, debugging challenges, and individual implementation reviews.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="scope-card p-4">
+                <div class="stat-tile-icon bg-warning bg-opacity-10 text-warning mb-3">
+                    <i class="bi bi-cpu"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Practical Lab Infrastructure</h5>
+                <p class="text-muted small mb-0">
+                    High-speed fiber connectivity, dedicated lab workstations, modern software stacks, and cloud environments replicate production workflows.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="scope-card p-4">
+                <div class="stat-tile-icon bg-success bg-opacity-10 text-success mb-3">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Career & Placement Cell</h5>
+                <p class="text-muted small mb-0">
+                    From resume writing and GitHub profile building to mock technical rounds with industry experts, we support you through every stage of job hunting.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} – SCOPE INDIA Admin{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'admin_course_list' %}" class="small text-muted text-decoration-none">&larr; Back to Courses List</a>
+    <h2 class="fw-bold text-dark mt-2">{{ title }}</h2>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5" style="max-width: 800px;">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Course Name <span class="text-danger">*</span></label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Duration <span class="text-danger">*</span></label>
+                {{ form.duration }}
+                {% if form.duration.errors %}
+                    <div class="text-danger small mt-1">{{ form.duration.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Fee (₹) <span class="text-danger">*</span></label>
+                {{ form.fee }}
+                {% if form.fee.errors %}
+                    <div class="text-danger small mt-1">{{ form.fee.errors.0 }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-semibold">Course Image</label>
+            {% if course and course.image %}
+                <div class="mb-2">
+                    <img src="{{ course.image.url }}" alt="{{ course.name }}" class="rounded border" style="width: 120px; height: 80px; object-fit: cover;">
+                </div>
+            {% endif %}
+            {{ form.image }}
+            {% if form.image.errors %}
+                <div class="text-danger small mt-1">{{ form.image.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-4 form-check">
+            {{ form.is_active }}
+            <label class="form-check-label fw-semibold" for="{{ form.is_active.id_for_label }}">
+                Mark course as active (visible on public website)
+            </label>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-warning fw-bold px-4 text-dark shadow-sm">Save Course</button>
+            <a href="{% url 'admin_course_list' %}" class="btn btn-secondary px-4">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

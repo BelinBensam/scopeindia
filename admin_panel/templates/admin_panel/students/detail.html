@@ -1,0 +1,95 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}Student Details – {{ student.full_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'admin_student_list' %}" class="small text-muted text-decoration-none">&larr; Back to Student Directory</a>
+    <h2 class="fw-bold text-dark mt-2">Student Dossier: {{ student.full_name }}</h2>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white mb-4">
+            {% if student.avatar %}
+                <img src="{{ student.avatar.url }}" alt="{{ student.full_name }}" class="rounded-circle border p-1 shadow-sm mx-auto mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+            {% else %}
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary border d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px; font-size: 2.5rem; font-weight: 700;">
+                    {{ student.first_name|slice:":1"|upper }}
+                </div>
+            {% endif %}
+
+            <h4 class="fw-bold text-dark mb-1">{{ student.full_name }}</h4>
+            <div class="text-muted small mb-2">{{ student.user.email }}</div>
+
+            <div>
+                {% if student.email_verified %}
+                    <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-1 rounded-pill">Email Verified</span>
+                {% else %}
+                    <span class="badge bg-warning bg-opacity-10 text-warning fw-bold px-3 py-1 rounded-pill">Unverified</span>
+                {% endif %}
+            </div>
+            
+            <hr class="my-3">
+
+            <div class="text-start small text-muted">
+                <div class="mb-2"><strong>Phone:</strong> {{ student.phone }}</div>
+                <div class="mb-2"><strong>Date of Birth:</strong> {{ student.date_of_birth|date:"d M Y" }}</div>
+                <div class="mb-2"><strong>Gender:</strong> {{ student.gender }}</div>
+                <div class="mb-2"><strong>Country:</strong> {{ student.country.name|default:"-" }}</div>
+                <div class="mb-2"><strong>State:</strong> {{ student.state.name|default:"-" }}</div>
+                <div class="mb-2"><strong>City:</strong> {{ student.city.name|default:"-" }}</div>
+                <div class="mb-0"><strong>Joined:</strong> {{ student.created_at|date:"d M Y, h:i A" }}</div>
+            </div>
+        </div>
+
+        <!-- HOBBIES -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+            <h6 class="fw-bold text-dark mb-3"><i class="bi bi-stars text-warning me-2"></i>Technical Interests</h6>
+            <div class="d-flex flex-wrap gap-2">
+                {% for h in student.hobbies.all %}
+                    <span class="badge bg-light text-dark border p-2">{{ h.name }}</span>
+                {% empty %}
+                    <span class="text-muted small">No technical interests recorded.</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: ENROLLMENT HISTORY -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+            <div class="card-header bg-transparent border-0 pt-4 px-4">
+                <h5 class="fw-bold text-dark mb-0">Course Enrollments ({{ student.enrollments.count }})</h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Course</th>
+                                <th>Duration</th>
+                                <th>Fee</th>
+                                <th>Enrolled At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enr in student.enrollments.all %}
+                                <tr>
+                                    <td class="fw-bold text-dark">{{ enr.course.name }}</td>
+                                    <td>{{ enr.course.duration }}</td>
+                                    <td class="text-success fw-bold">₹{{ enr.course.fee|floatformat:0 }}</td>
+                                    <td class="small text-muted">{{ enr.enrolled_at|date:"d M Y, h:i A" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="4" class="text-center py-4 text-muted">Student is not currently enrolled in any course.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

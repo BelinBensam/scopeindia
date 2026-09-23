@@ -1,0 +1,35 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} – SCOPE INDIA Admin{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'admin_city_list' %}" class="small text-muted text-decoration-none">&larr; Back to Cities List</a>
+    <h2 class="fw-bold text-dark mt-2">{{ title }}</h2>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white p-4" style="max-width: 500px;">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label fw-semibold">State <span class="text-danger">*</span></label>
+            {{ form.state }}
+            {% if form.state.errors %}
+                <div class="text-danger small mt-1">{{ form.state.errors.0 }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">City Name <span class="text-danger">*</span></label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+            {% endif %}
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-warning fw-bold px-4 text-dark shadow-sm">Save City</button>
+            <a href="{% url 'admin_city_list' %}" class="btn btn-secondary px-4">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

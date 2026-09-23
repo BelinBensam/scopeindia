@@ -1,0 +1,289 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SCOPE INDIA – Center for Software, Networking & Cloud Education{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="container position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+                    <i class="bi bi-star-fill me-1"></i> 100% Placement Assured IT Training
+                </span>
+                <h1 class="hero-title">
+                    Accelerate Your IT Career with <br>
+                    <span>SCOPE INDIA</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Premier Software, Cloud, DevOps, and Data Science training institute in Kerala and Tamil Nadu. Practical hands-on training mentored by working IT professionals with real-time projects.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'courses' %}" class="btn btn-scope-gold btn-lg px-4 shadow">
+                        <i class="bi bi-compass me-2"></i> Explore Courses
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-person-check me-2"></i> Register Now
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn btn-link text-white text-decoration-none d-flex align-items-center">
+                        <i class="bi bi-telephone-outbound me-2 text-warning"></i> Contact Us
+                    </a>
+                </div>
+
+                <!-- Fast Highlights -->
+                <div class="row mt-5 g-3 pt-3 border-top border-white border-opacity-10 text-white-50">
+                    <div class="col-4">
+                        <div class="fw-bold fs-4 text-white">10,000+</div>
+                        <div class="small">Students Trained</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold fs-4 text-white">100+</div>
+                        <div class="small">Hiring Companies</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-bold fs-4 text-white">100%</div>
+                        <div class="small">Placement Support</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white text-dark p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary me-3">
+                            <i class="bi bi-mortarboard-fill fs-2"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Admissions Open 2026</h5>
+                            <span class="text-muted small">New Batches Starting Every Week</span>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                    <div class="list-group list-group-flush small mb-3">
+                        <div class="list-group-item px-0 d-flex justify-content-between">
+                            <span><i class="bi bi-check-circle-fill text-success me-2"></i> Python Full Stack Development</span>
+                            <span class="badge bg-light text-primary">Popular</span>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between">
+                            <span><i class="bi bi-check-circle-fill text-success me-2"></i> Java Full Stack & Microservices</span>
+                            <span class="badge bg-light text-primary">In-Demand</span>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between">
+                            <span><i class="bi bi-check-circle-fill text-success me-2"></i> Data Science & AI Engineering</span>
+                            <span class="badge bg-light text-primary">Trending</span>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between">
+                            <span><i class="bi bi-check-circle-fill text-success me-2"></i> Cloud Architecture & DevOps</span>
+                            <span class="badge bg-light text-primary">High CTC</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'register' %}" class="btn btn-scope-navy w-100 fw-bold py-2">
+                        Get Started with Free Counseling
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TRAINING INTRODUCTION & BENEFITS -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="section-header">
+            <span class="section-tag">Why Choose Us</span>
+            <h2 class="section-title">Why Students Choose SCOPE INDIA</h2>
+            <p class="section-subtitle">
+                Over a decade of excellence in empowering aspiring developers and engineers with industry-grade practical exposure.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="scope-card p-4 text-center">
+                    <div class="stat-tile-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
+                        <i class="bi bi-laptop"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Live Industrial Projects</h5>
+                    <p class="text-muted small mb-0">
+                        Build portfolio-ready full stack web applications, REST APIs, and database architectures using modern frameworks.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="scope-card p-4 text-center">
+                    <div class="stat-tile-icon bg-warning bg-opacity-10 text-warning mx-auto mb-3">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Working IT Mentors</h5>
+                    <p class="text-muted small mb-0">
+                        Learn directly from experienced software architects and senior engineers working in leading tech companies.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="scope-card p-4 text-center">
+                    <div class="stat-tile-icon bg-success bg-opacity-10 text-success mx-auto mb-3">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">100% Placement Cell</h5>
+                    <p class="text-muted small mb-0">
+                        Dedicated placement wing providing resume grooming, mock technical interviews, and direct referrals to hiring partners.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED COURSES (DATABASE DRIVEN) -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+            <div>
+                <span class="section-tag">Career Tracks</span>
+                <h2 class="section-title mb-0">Featured IT Programs</h2>
+            </div>
+            <a href="{% url 'courses' %}" class="btn btn-outline-primary fw-semibold">
+                View All Courses <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for course in featured_courses %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="scope-card">
+                        {% if course.image %}
+                            <img src="{{ course.image.url }}" alt="{{ course.name }}" class="course-card-img">
+                        {% else %}
+                            <div class="course-card-img d-flex align-items-center justify-content-center bg-secondary text-white">
+                                <i class="bi bi-code-slash fs-1"></i>
+                            </div>
+                        {% endif %}
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">
+                                    <i class="bi bi-clock me-1"></i> {{ course.duration }}
+                                </span>
+                                <span class="fw-bold text-success fs-5">₹{{ course.fee|floatformat:0 }}</span>
+                            </div>
+                            <h5 class="fw-bold mb-2">{{ course.name }}</h5>
+                            <p class="text-muted small mb-4 flex-grow-1">
+                                {{ course.description|truncatewords:22 }}
+                            </p>
+                            <a href="{% url 'course_detail' course.id %}" class="btn btn-scope-navy w-100 fw-semibold">
+                                View Details & Syllabus
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No courses are available currently. Run seed data or add from Admin Panel.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- RECENT PLACEMENTS -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+            <div>
+                <span class="section-tag">Student Success</span>
+                <h2 class="section-title mb-0">Our Placed Students</h2>
+            </div>
+            <a href="{% url 'placements' %}" class="btn btn-outline-primary fw-semibold">
+                View All Placements <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for placement in placements %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="scope-card">
+                        {% if placement.image %}
+                            <img src="{{ placement.image.url }}" alt="{{ placement.name }}" class="placement-card-img">
+                        {% else %}
+                            <div class="placement-card-img d-flex align-items-center justify-content-center bg-light text-muted">
+                                <i class="bi bi-person-circle fs-1"></i>
+                            </div>
+                        {% endif %}
+                        <div class="p-4 text-center">
+                            <h5 class="fw-bold mb-1">{{ placement.name }}</h5>
+                            <div class="text-primary fw-semibold small mb-2">{{ placement.role }}</div>
+                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">
+                                <i class="bi bi-building me-1"></i> {{ placement.company }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-4 text-muted">
+                    Placements showcase will appear here once added in the admin panel.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ PREVIEW -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <span class="section-tag">Got Questions?</span>
+                <h2 class="section-title mb-3">Frequently Asked Questions</h2>
+                <p class="text-muted mb-4">
+                    Have inquiries regarding admission schedules, project mentorship, syllabus breakdown, or fees? Check our answers or reach out to our counselors.
+                </p>
+                <a href="{% url 'faq' %}" class="btn btn-scope-navy px-4">
+                    Read All FAQs <i class="bi bi-chevron-right ms-1"></i>
+                </a>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="accordion shadow-sm rounded-3 overflow-hidden" id="homeFaqAccordion">
+                    {% for f in faqs %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ f.id }}">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %} fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ f.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ f.id }}">
+                                    {{ f.question }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ f.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ f.id }}" data-bs-parent="#homeFaqAccordion">
+                                <div class="accordion-body text-muted">
+                                    {{ f.answer|linebreaks }}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="p-4 bg-white text-muted">No FAQs published yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CALL TO ACTION BANNER -->
+<section class="py-5 text-white" style="background: linear-gradient(135deg, var(--scope-navy-dark), var(--scope-blue));">
+    <div class="container text-center py-4">
+        <h2 class="fw-bold mb-3">Ready to Build Your Software Development Career?</h2>
+        <p class="lead text-white-50 mx-auto mb-4" style="max-width: 650px;">
+            Join over 10,000 successful alumni who transformed their careers through SCOPE INDIA's intensive hands-on coaching.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'register' %}" class="btn btn-scope-gold btn-lg px-4 shadow">
+                Register For Batches
+            </a>
+            <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg px-4">
+                Schedule a Visit
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

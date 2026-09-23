@@ -1,0 +1,52 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Frequently Asked Questions – SCOPE INDIA{% endblock %}
+
+{% block content %}
+<div class="bg-dark text-white py-5" style="background: linear-gradient(135deg, var(--scope-navy-dark), var(--scope-navy));">
+    <div class="container text-center py-3">
+        <h1 class="fw-bold display-5 mb-2">Frequently Asked Questions</h1>
+        <p class="text-white-50 lead mb-0">Answers to Common Inquiries About Admissions, Courses & Placement</p>
+    </div>
+</div>
+
+<div class="container py-5" style="max-width: 900px;">
+    <!-- FAQ ACCORDION (DATABASE-DRIVEN) -->
+    <div class="accordion shadow-sm rounded-4 overflow-hidden mb-5" id="mainFaqAccordion">
+        {% for f in faqs %}
+            <div class="accordion-item border-bottom">
+                <h2 class="accordion-header" id="heading{{ f.id }}">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %} fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ f.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ f.id }}">
+                        <span class="text-primary me-2">Q{{ forloop.counter }}.</span> {{ f.question }}
+                    </button>
+                </h2>
+                <div id="collapse{{ f.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ f.id }}" data-bs-parent="#mainFaqAccordion">
+                    <div class="accordion-body text-muted leading-relaxed bg-light bg-opacity-50">
+                        {{ f.answer|linebreaks }}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="p-5 text-center bg-white text-muted">
+                <i class="bi bi-question-circle fs-1 text-muted d-block mb-3"></i>
+                <h5>No FAQs Available</h5>
+                <p>New questions and answers will be published soon.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- ADMINISTRATOR PORTAL ACCESS PROMPT (AS SPECIFIED IN SECTION 14) -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+            <div class="text-sm-start">
+                <h5 class="fw-bold text-dark mb-1"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Are you an administrator?</h5>
+                <p class="text-muted small mb-0">Authorized institute staff and academic admins can access the backend control center.</p>
+            </div>
+            <a href="{% url 'admin_login' %}" class="btn btn-scope-navy px-4 py-2 fw-semibold">
+                Admin Panel <i class="bi bi-box-arrow-in-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

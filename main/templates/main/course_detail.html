@@ -1,0 +1,188 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}{{ course.name }} – SCOPE INDIA Training{% endblock %}
+
+{% block content %}
+<!-- HEADER BANNER -->
+<div class="bg-dark text-white py-5" style="background: linear-gradient(135deg, var(--scope-navy-dark), var(--scope-navy));">
+    <div class="container py-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'courses' %}" class="text-white-50 text-decoration-none">Courses</a></li>
+                <li class="breadcrumb-item active text-warning" aria-current="page">{{ course.name }}</li>
+            </ol>
+        </nav>
+        <h1 class="fw-bold display-5 mb-2">{{ course.name }}</h1>
+        <div class="d-flex flex-wrap gap-4 text-white-50 small mt-3">
+            <span><i class="bi bi-clock-fill text-warning me-1"></i> Duration: <strong class="text-white">{{ course.duration }}</strong></span>
+            <span><i class="bi bi-currency-rupee text-warning me-1"></i> Training Fee: <strong class="text-white">₹{{ course.fee|floatformat:0 }}</strong></span>
+            <span><i class="bi bi-patch-check-fill text-warning me-1"></i> Certification Included</span>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <!-- LEFT: COURSE OVERVIEW & SYLLABUS -->
+        <div class="col-lg-8">
+            <div class="bg-white p-4 rounded-4 shadow-sm border border-light mb-4">
+                <h3 class="fw-bold text-dark mb-3">Course Overview</h3>
+                <div class="text-muted leading-relaxed">
+                    {{ course.description|linebreaks }}
+                </div>
+            </div>
+
+            <!-- SYLLABUS MODULES -->
+            <div class="bg-white p-4 rounded-4 shadow-sm border border-light">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold text-dark mb-0">Detailed Curriculum & Syllabus</h3>
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 fw-semibold">
+                        {{ syllabus_list|length }} Modules
+                    </span>
+                </div>
+
+                <div class="accordion" id="syllabusAccordion">
+                    {% for module in syllabus_list %}
+                        <div class="accordion-item mb-2 border rounded overflow-hidden">
+                            <h2 class="accordion-header" id="modHeading{{ module.id }}">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %} fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#modCollapse{{ module.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="modCollapse{{ module.id }}">
+                                    <span class="badge bg-warning text-dark me-3">Module {{ module.order }}</span>
+                                    {{ module.title }}
+                                </button>
+                            </h2>
+                            <div id="modCollapse{{ module.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="modHeading{{ module.id }}" data-bs-parent="#syllabusAccordion">
+                                <div class="accordion-body text-muted bg-light bg-opacity-50">
+                                    {% if module.description %}
+                                        {{ module.description|linebreaks }}
+                                    {% else %}
+                                        <p class="small text-muted mb-0">Hands-on exercises and project implementations covering core fundamentals and advanced patterns.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-light border text-muted">
+                            Syllabus details for this program are being updated. Please contact our counseling desk.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: ENROLLMENT ACTION & COURSE CARD -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+                <div class="card border-0 shadow rounded-4 overflow-hidden mb-4">
+                    {% if course.image %}
+                        <img src="{{ course.image.url }}" alt="{{ course.name }}" class="card-img-top" style="height: 220px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <i class="bi bi-laptop fs-1"></i>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted">Total Program Fee:</span>
+                            <span class="fs-3 fw-bold text-success">₹{{ course.fee|floatformat:0 }}</span>
+                        </div>
+
+                        <ul class="list-unstyled small text-muted mb-4 border-top border-bottom py-3">
+                            <li class="mb-2"><i class="bi bi-clock-history text-primary me-2"></i> <strong>Duration:</strong> {{ course.duration }}</li>
+                            <li class="mb-2"><i class="bi bi-award text-primary me-2"></i> <strong>Certificate:</strong> ISO 9001 Certified Diploma</li>
+                            <li class="mb-2"><i class="bi bi-person-workspace text-primary me-2"></i> <strong>Training Mode:</strong> Lab + Classroom + Online</li>
+                            <li><i class="bi bi-briefcase text-primary me-2"></i> <strong>Placement:</strong> 100% Placement Support</li>
+                        </ul>
+
+                        <!-- ENROLLMENT STATUS / ACTIONS -->
+                        {% if not user.is_authenticated %}
+                            <div class="p-3 bg-light rounded-3 text-center mb-3">
+                                <p class="small text-muted mb-2">Please login to signup for this course.</p>
+                                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-scope-navy w-100 fw-bold">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Login to Enroll
+                                </a>
+                            </div>
+                            <div class="text-center">
+                                <span class="small text-muted">Don't have an account?</span>
+                                <a href="{% url 'register' %}" class="small fw-bold text-primary ms-1">Register Now</a>
+                            </div>
+                        {% elif is_enrolled %}
+                            <div class="alert alert-success d-flex align-items-center mb-3" role="alert">
+                                <i class="bi bi-check-circle-fill fs-4 me-2"></i>
+                                <div>
+                                    <strong>Enrolled!</strong><br>
+                                    You have already signed up for this course.
+                                </div>
+                            </div>
+                            <a href="{% url 'my_courses' %}" class="btn btn-outline-success w-100 fw-semibold">
+                                <i class="bi bi-folder-check me-1"></i> Go to My Courses
+                            </a>
+                        {% elif user.is_staff %}
+                            <div class="alert alert-info small mb-0">
+                                <i class="bi bi-info-circle me-1"></i> You are browsing as Staff/Admin.
+                            </div>
+                        {% else %}
+                            <!-- Action button opening confirmation modal -->
+                            <button type="button" class="btn btn-scope-gold btn-lg w-100 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#enrollModal">
+                                <i class="bi bi-check2-circle me-1"></i> Signup for Course
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- HELP BOX -->
+                <div class="card border-0 bg-light p-3 rounded-3 text-center">
+                    <div class="small fw-bold text-dark mb-1">Need help deciding?</div>
+                    <div class="small text-muted mb-2">Talk to our course advisor right away</div>
+                    <a href="tel:+919745936073" class="text-decoration-none text-primary fw-bold">
+                        <i class="bi bi-telephone-fill me-1"></i> +91 97459 36073
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ENROLLMENT CONFIRMATION MODAL -->
+{% if user.is_authenticated and not is_enrolled and not user.is_staff %}
+<div class="modal fade" id="enrollModal" tabindex="-1" aria-labelledby="enrollModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header bg-scope-navy text-white" style="background-color: var(--scope-navy);">
+                <h5 class="modal-title text-white fw-bold" id="enrollModalLabel">
+                    <i class="bi bi-journal-plus text-warning me-2"></i> Course Enrollment Confirmation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <i class="bi bi-mortarboard-fill text-warning" style="font-size: 3.5rem;"></i>
+                <h5 class="fw-bold mt-3 mb-2">{{ course.name }}</h5>
+                <p class="text-muted mb-3">
+                    Are you sure you want to signup for this course?
+                </p>
+                <div class="bg-light p-3 rounded text-start small mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Duration:</span>
+                        <strong>{{ course.duration }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Fee:</span>
+                        <strong class="text-success">₹{{ course.fee|floatformat:0 }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center gap-2 pb-4 border-0">
+                <button type="button" class="btn btn-secondary px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="{% url 'dashboard_course_enroll' course.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class="btn btn-scope-gold px-4 fw-bold">Confirm & Signup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

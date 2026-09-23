@@ -1,0 +1,113 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+
+{% block title %}Manage Placements – SCOPE INDIA Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Placement Records</h2>
+        <p class="text-muted mb-0">Showcase student placement achievements dynamically on the public site.</p>
+    </div>
+    <a href="{% url 'admin_placement_create' %}" class="btn btn-warning fw-bold text-dark shadow-sm">
+        <i class="bi bi-plus-circle-fill me-1"></i> Add Placement Record
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Student</th>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Date Added</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in page_obj %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="rounded-circle" style="width: 44px; height: 44px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-muted" style="width: 44px; height: 44px;">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                {% endif %}
+                                <strong class="text-dark">{{ item.name }}</strong>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-warning text-dark px-3 py-2 fw-bold">
+                                <i class="bi bi-building me-1"></i> {{ item.company }}
+                            </span>
+                        </td>
+                        <td class="text-primary fw-semibold">{{ item.role }}</td>
+                        <td class="small text-muted">{{ item.created_at|date:"d M Y" }}</td>
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex gap-2">
+                                <a href="{% url 'admin_placement_edit' item.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delPlacement{{ item.id }}" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+
+                            <!-- DELETE MODAL -->
+                            <div class="modal fade" id="delPlacement{{ item.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content text-start rounded-4 border-0 shadow">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h6 class="modal-title fw-bold">Delete Placement Record</h6>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body p-4 text-center">
+                                            <i class="bi bi-trash-fill text-danger fs-1"></i>
+                                            <h5 class="fw-bold mt-2">Remove '{{ item.name }}'?</h5>
+                                            <p class="text-muted small">This student's placement card will be removed from the public website.</p>
+                                        </div>
+                                        <div class="modal-footer border-0 justify-content-center gap-2 pb-4">
+                                            <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="POST" action="{% url 'admin_placement_delete' item.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger px-4 fw-bold">Confirm Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">No placement records available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+        <div class="p-3 d-flex justify-content-center">
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

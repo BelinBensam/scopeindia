@@ -1,0 +1,122 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Course Catalog & Search – SCOPE INDIA{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h2 class="fw-bold text-dark mb-1">Available Programs</h2>
+        <p class="text-muted mb-0">Search and signup for specialized IT training programs.</p>
+    </div>
+
+    <!-- SEARCH FORM (Django Q objects backend) -->
+    <form method="GET" action="{% url 'dashboard_courses' %}" class="d-flex gap-2" style="max-width: 400px; width: 100%;">
+        <div class="input-group">
+            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search by name, Python, Java...">
+            <button class="btn btn-scope-navy" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+            {% if query %}
+                <a href="{% url 'dashboard_courses' %}" class="btn btn-outline-secondary">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+{% if query %}
+    <div class="mb-4">
+        <span class="badge bg-light text-dark p-2 fs-6">
+            Showing results for: "<strong>{{ query }}</strong>" ({{ courses|length }} found)
+        </span>
+    </div>
+{% endif %}
+
+<div class="row g-4">
+    {% for course in courses %}
+        <div class="col-lg-4 col-md-6">
+            <div class="scope-card">
+                {% if course.image %}
+                    <img src="{{ course.image.url }}" alt="{{ course.name }}" class="course-card-img">
+                {% else %}
+                    <div class="course-card-img d-flex align-items-center justify-content-center bg-secondary text-white">
+                        <i class="bi bi-terminal fs-1"></i>
+                    </div>
+                {% endif %}
+
+                <div class="p-4 d-flex flex-column flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">
+                            <i class="bi bi-clock me-1"></i> {{ course.duration }}
+                        </span>
+                        <span class="fw-bold text-success fs-5">₹{{ course.fee|floatformat:0 }}</span>
+                    </div>
+
+                    <h5 class="fw-bold mb-2">{{ course.name }}</h5>
+                    <p class="text-muted small mb-3 flex-grow-1">
+                        {{ course.description|truncatewords:20 }}
+                    </p>
+
+                    <div class="small text-muted mb-3">
+                        <i class="bi bi-check2-all text-primary me-1"></i> {{ course.syllabus_modules.count }} Curriculum Modules
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'course_detail' course.id %}" class="btn btn-outline-secondary w-50 fw-semibold">
+                            Details
+                        </a>
+
+                        {% if course.id in enrolled_course_ids %}
+                            <button class="btn btn-success w-50 fw-semibold" disabled>
+                                <i class="bi bi-check-circle-fill me-1"></i> Enrolled
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-scope-gold w-50 fw-bold" data-bs-toggle="modal" data-bs-target="#enrollModal{{ course.id }}">
+                                Signup
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENROLLMENT MODAL -->
+        <div class="modal fade" id="enrollModal{{ course.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow">
+                    <div class="modal-header" style="background-color: var(--scope-navy);">
+                        <h6 class="modal-title text-white fw-bold">Confirm Course Signup</h6>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4 text-center">
+                        <i class="bi bi-mortarboard-fill text-warning fs-1"></i>
+                        <h5 class="fw-bold mt-2 mb-2">{{ course.name }}</h5>
+                        <p class="text-muted small mb-3">Are you sure you want to signup for this course?</p>
+                        <div class="bg-light p-3 rounded small text-start">
+                            <div><strong>Duration:</strong> {{ course.duration }}</div>
+                            <div><strong>Course Fee:</strong> ₹{{ course.fee|floatformat:0 }}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center gap-2 pb-4">
+                        <button type="button" class="btn btn-secondary px-3 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                        <form method="POST" action="{% url 'dashboard_course_enroll' course.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            <button type="submit" class="btn btn-scope-gold px-4 fw-bold">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="p-5 bg-white rounded-3 shadow-sm">
+                <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>
+                <h5>No Courses Found</h5>
+                <p class="text-muted">No programs matched your search query. Try another keyword or browse all.</p>
+                <a href="{% url 'dashboard_courses' %}" class="btn btn-outline-primary btn-sm">View All Courses</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

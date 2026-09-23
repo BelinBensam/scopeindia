@@ -1,0 +1,193 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}My Profile – SCOPE INDIA{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold text-dark">Student Profile</h2>
+    <p class="text-muted">Manage your personal information, contact credentials, and technical interests.</p>
+</div>
+
+<div class="row g-4">
+    <!-- LEFT: PROFILE SUMMARY CARD -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white">
+            <div class="position-relative d-inline-block mx-auto mb-3">
+                {% if student.avatar %}
+                    <img id="avatar-preview-img" src="{{ student.avatar.url }}" alt="{{ student.full_name }}" class="rounded-circle border p-1 shadow-sm" style="width: 130px; height: 130px; object-fit: cover;">
+                {% else %}
+                    <div id="avatar-preview-img" class="rounded-circle bg-primary bg-opacity-10 text-primary border d-flex align-items-center justify-content-center mx-auto" style="width: 130px; height: 130px; font-size: 3rem; font-weight: 700;">
+                        {{ student.first_name|slice:":1"|upper }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <h4 class="fw-bold text-dark mb-1">{{ student.full_name }}</h4>
+            <div class="text-muted small mb-2"><i class="bi bi-envelope me-1"></i>{{ student.user.email }}</div>
+            
+            <div class="mb-3">
+                {% if student.email_verified %}
+                    <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill">
+                        <i class="bi bi-patch-check-fill me-1"></i> Email Verified
+                    </span>
+                {% else %}
+                    <span class="badge bg-warning bg-opacity-10 text-warning fw-bold px-3 py-2 rounded-pill">
+                        <i class="bi bi-exclamation-circle me-1"></i> Verification Pending
+                    </span>
+                {% endif %}
+            </div>
+
+            <hr class="my-3">
+
+            <div class="text-start small text-muted">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Phone:</span>
+                    <strong class="text-dark">{{ student.phone }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Gender:</span>
+                    <strong class="text-dark">{{ student.gender }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Date of Birth:</span>
+                    <strong class="text-dark">{{ student.date_of_birth|date:"d M Y" }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Location:</span>
+                    <strong class="text-dark">{{ student.city.name }}, {{ student.state.name }}</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Member Since:</span>
+                    <strong class="text-dark">{{ student.created_at|date:"M Y" }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: EDIT PROFILE FORM -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+            <h4 class="fw-bold text-dark mb-4">Edit Profile Details</h4>
+
+            <form method="POST" action="{% url 'student_profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for err in form.non_field_errors %}
+                            <div>{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">First Name <span class="text-danger">*</span></label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Last Name <span class="text-danger">*</span></label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Gender <span class="text-danger">*</span></label>
+                        {{ form.gender }}
+                        {% if form.gender.errors %}
+                            <div class="text-danger small mt-1">{{ form.gender.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Date of Birth <span class="text-danger">*</span></label>
+                        {{ form.date_of_birth }}
+                        {% if form.date_of_birth.errors %}
+                            <div class="text-danger small mt-1">{{ form.date_of_birth.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Phone Number <span class="text-danger">*</span></label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Update Avatar Photo</label>
+                        {{ form.avatar }}
+                        {% if form.avatar.errors %}
+                            <div class="text-danger small mt-1">{{ form.avatar.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- LOCATION DROPDOWNS -->
+                <h5 class="fw-bold text-primary mb-3 border-bottom pb-2">
+                    <i class="bi bi-geo-alt-fill me-1"></i> Location Details
+                </h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Country <span class="text-danger">*</span></label>
+                        {{ form.country }}
+                        {% if form.country.errors %}
+                            <div class="text-danger small mt-1">{{ form.country.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">State <span class="text-danger">*</span></label>
+                        {{ form.state }}
+                        {% if form.state.errors %}
+                            <div class="text-danger small mt-1">{{ form.state.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">City <span class="text-danger">*</span></label>
+                        {{ form.city }}
+                        {% if form.city.errors %}
+                            <div class="text-danger small mt-1">{{ form.city.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- HOBBIES -->
+                <h5 class="fw-bold text-primary mb-3 border-bottom pb-2">
+                    <i class="bi bi-stars me-1"></i> Technical Interests
+                </h5>
+
+                <div class="mb-4">
+                    <div class="d-flex flex-wrap gap-3 p-3 bg-light rounded-3">
+                        {% for checkbox in form.hobbies %}
+                            <div class="form-check">
+                                {{ checkbox.tag }}
+                                <label class="form-check-label fw-semibold small" for="{{ checkbox.id_for_label }}">
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.hobbies.errors %}
+                        <div class="text-danger small mt-1">{{ form.hobbies.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-scope-navy btn-lg px-4 fw-bold shadow-sm">
+                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
