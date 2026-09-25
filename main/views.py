@@ -107,7 +107,8 @@ def contact(request):
 
 
 def register(request):
-    if request.user.is_authenticated:
+    # Only redirect active students who already have an account to dashboard
+    if request.user.is_authenticated and hasattr(request.user, 'student_profile') and not request.user.is_staff:
         return redirect('dashboard_home')
 
     if request.method == 'POST':
@@ -115,6 +116,10 @@ def register(request):
         if form.is_valid():
             try:
                 with transaction.atomic():
+                    # Clear any prior session (e.g. staff session) so newly registered student is not shadowed
+                    if request.user.is_authenticated:
+                        logout(request)
+
                     # Generate temporary password
                     temp_pwd = generate_temporary_password(10)
                     email = form.cleaned_data['email']
@@ -151,14 +156,15 @@ def register(request):
                         student.hobbies.set(form.cleaned_data['hobbies'])
 
                     # Send ONLY the temporary password by email (no verification link)
-                    sent = send_temp_password_email(user, student, temp_pwd)
+                    send_temp_password_email(user, student, temp_pwd)
 
                     request.session['registration_email'] = email
+                    request.session['registration_temp_password'] = temp_pwd
 
                     messages.success(
                         request,
-                        "Registration successful! A temporary password has been sent to your email. "
-                        "Please log in with that password to set your permanent one."
+                        "Registration successful! Your temporary login password has been generated. "
+                        "Please log in to your student dashboard to set your permanent password."
                     )
                     return redirect('registration_success')
 
@@ -177,16 +183,17 @@ def register(request):
 
 def registration_success(request):
     registered_email = request.session.get('registration_email', 'your email')
+    temp_password = request.session.get('registration_temp_password')
     context = {
         'registered_email': registered_email,
+        'temp_password': temp_password,
     }
     return render(request, 'main/registration_success.html', context)
 
 
 def user_login(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff:
-            return redirect('admin_dashboard')
+    # Only redirect active students who already have an account to dashboard
+    if request.user.is_authenticated and hasattr(request.user, 'student_profile') and not request.user.is_staff:
         return redirect('dashboard_home')
 
     if request.method == 'POST':

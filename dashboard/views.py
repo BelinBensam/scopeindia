@@ -18,8 +18,6 @@ def student_required(view_func):
         if not request.user.is_authenticated:
             return redirect('login')
         if not hasattr(request.user, 'student_profile'):
-            if request.user.is_staff:
-                return redirect('admin_dashboard')
             messages.error(request, "Access restricted to student accounts.")
             return redirect('login')
 
@@ -148,10 +146,10 @@ def change_password_view(request):
                 student.force_password_change = False
                 student.save()
 
-            # Invalidate session and log out
-            logout(request)
-            messages.success(request, "Password changed successfully. Please login again.")
-            return redirect('login')
+            from django.contrib.auth import update_session_auth_hash
+            update_session_auth_hash(request, user)
+            messages.success(request, "Your password has been successfully set! Welcome to your student dashboard.")
+            return redirect('dashboard_home')
         else:
             messages.error(request, "Please fix the password errors below.")
     else:

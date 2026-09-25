@@ -279,3 +279,68 @@ class ScopeIndiaAppTests(TestCase):
         response_post = self.client.post(reverse('admin_course_delete', kwargs={'id': test_course.id}))
         self.assertRedirects(response_post, reverse('admin_course_list'))
         self.assertFalse(Course.objects.filter(id=test_course.id).exists())
+
+    # 8. NAVIGATION DECOUPLING & ADMIN LOGIN REDIRECTION TESTS
+    def test_public_pages_do_not_contain_admin_links_and_contain_student_nav(self):
+        admin_login_url = reverse('admin_login')
+        admin_dash_url = reverse('admin_dashboard')
+        public_urls = [
+            reverse('home'),
+            reverse('about'),
+            reverse('courses'),
+            reverse('placements'),
+            reverse('faq'),
+            reverse('contact'),
+        ]
+        for url in public_urls:
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+            content = response.content.decode('utf-8')
+            # Verify admin URLs are not linked
+            self.assertNotIn(f'href="{admin_login_url}"', content, f"Found admin_login link in {url}")
+            self.assertNotIn(f'href="{admin_dash_url}"', content, f"Found admin_dashboard link in {url}")
+            # Verify Student Register and Student Login are in the navigation
+            self.assertIn("Student Register", content, f"Student Register missing in {url}")
+            self.assertIn("Student Login", content, f"Student Login missing in {url}")
+
+    def test_admin_login_via_main_login_redirects_to_admin_dashboard(self):
+        response = self.client.post(reverse('login'), {
+            'email': 'admin@scopeindia.org',
+            'password': 'Admin@Password123',
+        })
+        self.assertRedirects(response, reverse('admin_dashboard'))
+
+    def test_admin_login_via_admin_url_redirects_to_admin_dashboard(self):
+        response = self.client.post(reverse('admin_login'), {
+            'username_or_email': 'admin@scopeindia.org',
+            'password': 'Admin@Password123',
+        })
+        self.assertRedirects(response, reverse('admin_dashboard'))
+
+    def test_admin_logged_in_can_view_student_register_page(self):
+        # Log in as admin
+        self.client.login(username='admin@scopeindia.org', password='Admin@Password123')
+        # Visit student register page - must NOT redirect to admin dashboard
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Student Registration")
+
+    def test_admin_logged_in_can_view_student_login_page(self):
+        # Log in as admin
+        self.client.login(username='admin@scopeindia.org', password='Admin@Password123')
+        # Visit student login page - must NOT redirect to admin dashboard
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Welcome Back")
+
+    def test_student_cannot_access_admin_dashboard_or_admin_views(self):
+        # Log in as student
+        self.client.login(username='student@example.com', password='Student@Password123')
+        # Attempt to access admin dashboard
+        response = self.client.get(reverse('admin_dashboard'))
+        self.assertRedirects(response, reverse('admin_login'))
+        # Follow redirect and verify access denied message
+        response_follow = self.client.get(reverse('admin_dashboard'), follow=True)
+        self.assertContains(response_follow, "Access denied. Administrator credentials required.")
+
+

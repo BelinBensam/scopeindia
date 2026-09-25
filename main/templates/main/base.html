@@ -31,14 +31,10 @@
             </div>
             <div class="d-flex align-items-center gap-3">
                 <span class="badge bg-warning text-dark fw-bold">ISO 9001:2015 Certified</span>
-                {% if user.is_authenticated %}
-                    {% if user.is_staff %}
-                        <a href="{% url 'admin_dashboard' %}" class="fw-semibold text-warning"><i class="bi bi-speedometer2"></i> Admin Panel</a>
-                    {% else %}
-                        <a href="{% url 'dashboard_home' %}" class="fw-semibold text-warning"><i class="bi bi-person-circle"></i> Student Portal</a>
-                    {% endif %}
+                {% if user.is_authenticated and not user.is_staff %}
+                    <a href="{% url 'dashboard_home' %}" class="fw-semibold text-warning"><i class="bi bi-person-circle"></i> Student Portal</a>
                 {% else %}
-                    <a href="{% url 'admin_login' %}" class="text-white-50"><i class="bi bi-shield-lock me-1"></i> Staff Login</a>
+                    <a href="{% url 'login' %}" class="text-white-50"><i class="bi bi-person-circle me-1"></i> Student Portal</a>
                 {% endif %}
             </div>
         </div>
@@ -85,24 +81,17 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-2 py-2 py-lg-0">
-                    {% if user.is_authenticated %}
-                        {% if user.is_staff %}
-                            <a href="{% url 'admin_dashboard' %}" class="btn btn-scope-gold btn-sm">
-                                <i class="bi bi-gear-fill me-1"></i> Admin Dashboard
-                            </a>
-                            <a href="{% url 'admin_logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
-                        {% else %}
-                            <a href="{% url 'dashboard_home' %}" class="btn btn-scope-gold btn-sm">
-                                <i class="bi bi-speedometer2 me-1"></i> Dashboard
-                            </a>
-                            <a href="{% url 'student_logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
-                        {% endif %}
+                    {% if user.is_authenticated and not user.is_staff %}
+                        <a href="{% url 'dashboard_home' %}" class="btn btn-scope-gold btn-sm">
+                            <i class="bi bi-speedometer2 me-1"></i> Student Dashboard
+                        </a>
+                        <a href="{% url 'student_logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
                     {% else %}
                         <a href="{% url 'register' %}" class="btn btn-scope-gold btn-sm">
-                            <i class="bi bi-person-plus-fill me-1"></i> Register
+                            <i class="bi bi-person-plus-fill me-1"></i> Student Register
                         </a>
                         <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Student Login
                         </a>
                     {% endif %}
                 </div>
@@ -188,9 +177,9 @@
                     <p class="small text-white-50 mb-3"><i class="bi bi-clock text-warning me-2"></i> Mon - Sat: 9:00 AM - 6:30 PM</p>
                     
                     <div class="p-3 rounded bg-black bg-opacity-25 border border-white border-opacity-10">
-                        <div class="small text-white-50 mb-1">Administrative Access</div>
-                        <a href="{% url 'admin_login' %}" class="btn btn-warning btn-sm w-100 fw-semibold text-dark">
-                            <i class="bi bi-shield-lock me-1"></i> Staff Admin Portal
+                        <div class="small text-white-50 mb-1">Student Portal</div>
+                        <a href="{% url 'login' %}" class="btn btn-warning btn-sm w-100 fw-semibold text-dark">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Student Login
                         </a>
                     </div>
                 </div>
