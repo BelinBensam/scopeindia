@@ -110,7 +110,6 @@ def profile_view(request):
         if form.is_valid():
             updated_student = form.save()
 
-            # Keep User model's first_name and last_name synchronized
             user = request.user
             user.first_name = updated_student.first_name
             user.last_name = updated_student.last_name
